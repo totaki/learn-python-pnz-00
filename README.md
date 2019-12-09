@@ -1,3 +1,5 @@
 # learn-python-pnz-00
 
-Для парсинга выбрал сайт penza-afisha.ru
+Сергей Алексеев
+- Site, penza-afisha.ru
+- API, vk.com/dev
