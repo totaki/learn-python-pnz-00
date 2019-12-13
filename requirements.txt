@@ -1,6 +1,9 @@
 asgiref==3.2.3
+beautifulsoup4==4.8.1
 Click==7.0
 Django==3.0
+pkg-resources==0.0.0
 pytz==2019.3
 six==1.13.0
+soupsieve==1.9.5
 sqlparse==0.3.0
