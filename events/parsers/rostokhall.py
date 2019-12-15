@@ -15,7 +15,7 @@ def get_events(html):
         }
         for event in all_events:
             try:
-                title = event.find('h0').text
+                title = event.find('h3').text
 
                 body = event.div.find(class_="AfishaEventText").text
                 event_body = body.partition(title)
@@ -41,7 +41,7 @@ def get_events(html):
 
 def open_html():
     try:
-        with open("rostokhall1.html") as f:
+        with open("rostokhall.html") as f:
             html = f.read()
             return html
     except FileNotFoundError:
