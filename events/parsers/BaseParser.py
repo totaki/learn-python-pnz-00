@@ -2,11 +2,9 @@ from abc import ABC, abstractmethod
 
 
 class BaseParser(ABC):
+    name: str
 
-    def __init__(self, requests_method, url, **kwargs):
-        self.requests_method = requests_method
-        self.url = url
-        self.kwargs = kwargs
+    def __init__(self):
         self.items = []
 
     @abstractmethod
@@ -17,8 +15,7 @@ class BaseParser(ABC):
         - url
         - kwargs, которые будут добавлены в параметры запроса
         """
-        params = (self.requests_method, self.url, self.kwargs)
-        return params
+        pass
 
     @abstractmethod
     def parse(self, string: str) -> None:
