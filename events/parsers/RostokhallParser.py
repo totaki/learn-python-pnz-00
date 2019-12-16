@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from events.parsers.BaseParser import BaseParser
 
 url = "https://rostokhall.ru/afisha/"
+logging.basicConfig(filename="rostokhall.log", level=logging.INFO)
 
 
 def get_html(url: str) -> str:
@@ -19,7 +20,6 @@ def get_html(url: str) -> str:
 
 
 class RostokhallParser(BaseParser):
-    logging.basicConfig(filename="rostokhall.log", level=logging.INFO)
 
     def get_request_params(self):  # -> Tuple[str, str, dict]:
         """
