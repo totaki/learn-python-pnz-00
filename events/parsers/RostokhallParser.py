@@ -1,34 +1,21 @@
-import requests
 import logging
+from typing import Tuple
 from bs4 import BeautifulSoup
 from events.parsers.BaseParser import BaseParser
 
-url = "https://rostokhall.ru/afisha/"
 logging.basicConfig(filename="rostokhall.log", level=logging.INFO)
-
-
-def get_html(url: str) -> str:
-    """
-    Метод получает html страницу используя библиотеку requests
-    """
-    try:
-        result = requests.get(url)
-        result.raise_for_status()
-        return result.text
-    except requests.RequestException:
-        logging.error('Ошибка ответа удаленного сервера')
 
 
 class RostokhallParser(BaseParser):
 
-    def get_request_params(self):  # -> Tuple[str, str, dict]:
+    def get_request_params(self) -> Tuple[str, str, dict]:
         """
         Это метод должен возвращать кортеж следующих данных
         - имя метода requests (get, post)
         - url
         - kwargs, которые будут добавлены в параметры запроса
         """
-        pass
+        return ('get', "https://rostokhall.ru/afisha/", {})
 
     def parse(self, html: str) -> None:
         """
@@ -64,8 +51,3 @@ class RostokhallParser(BaseParser):
                     logging.error('AttributeError - Ошибка поиска по странице HTML, отсутствует тег для поиска')
         else:
             logging.error('Ошибка, нет тэга "section, class_=AfishaEvent"')
-
-
-a = RostokhallParser()
-a.parse(get_html(url))
-print(a.items)
