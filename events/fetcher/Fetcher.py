@@ -1,7 +1,6 @@
 import requests
 import logging
 from events.parsers.BaseParser import BaseParser
-from events.parsers.RostokhallParser import RostokhallParser
 from typing import List
 
 
@@ -27,8 +26,3 @@ class Fetcher:
                 logging.error(f'{result.status_code} Ошибка ответа удаленного сервера')
 
 
-if __name__ == '__main__':
-    a = RostokhallParser()
-    b = Fetcher([a])
-    b()
-    print(b.results)
