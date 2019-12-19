@@ -45,7 +45,6 @@ class RostokhallParser(BaseParser):
                         "title": title,
                         "body": event_body,
                         "event_time": event_time,
-                        "tags": "tags",
                         **PLACE_DIR
                     })
                 except AttributeError:
