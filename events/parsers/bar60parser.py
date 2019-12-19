@@ -9,10 +9,7 @@ logging.basicConfig(filename="bar60parser.log", level=logging.INFO)
 class BarParser(BaseParser):
 
     def get_request_params(self):  # -> Tuple[str, str, dict]:
-        params = {
-            'date': datetime.now().strftime("%d.%m.%Y")
-        }
-        return 'GET', 'http://bar60.ru/events?categoryId=0&date=', params
+        return 'GET', 'http://bar60.ru/events', {}
 
     def parse(self, html: str) -> None:
         """
