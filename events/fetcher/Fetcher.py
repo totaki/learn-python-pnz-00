@@ -24,5 +24,3 @@ class Fetcher:
                 self.results.append(parser.items)
             except (requests.RequestException, requests.Timeout):
                 logging.error(f'{result.status_code} Ошибка ответа удаленного сервера')
-
-
