@@ -10,7 +10,8 @@ PLACE_DIR = {
     "place_name": 'Rostokhall',
     "city": "Penza",
     "street": "Zlobina",
-    "house_number": "19"
+    "house_number": "19",
+    "office_number": 0
 }
 MONTHS = [
     "января",
@@ -35,6 +36,19 @@ MONTH_MAP = {
 
 
 class RostokhallParser(BaseParser):
+
+    def get_formatted_date(self, event_time):
+        today = date.today()
+        month = event_time[1].lower()
+        month = MONTH_MAP[month]
+        if today.month in (10, 11, 12) and int(month) < 10:
+            year = today.year + 1
+        else:
+            year = today.year
+        event_day = f'{year}-{month}-{event_time[0]} {event_time[2]}'
+        format_date = '%Y-%m-%d %H:%M'
+        event_day = datetime.strptime(event_day, format_date)
+        return event_day
 
     def get_request_params(self) -> Tuple[str, str, dict]:
         """
@@ -62,12 +76,7 @@ class RostokhallParser(BaseParser):
                     event_body = event_body[2].strip()
                     event_time = event.find('div', class_="AfishaEventData").text
                     event_time = event_time.split()
-                    today = date.today()
-                    month = event_time[1].lower()
-                    month = MONTH_MAP[month]
-                    event_day = f'{today.year}-{month}-{event_time[0]} {event_time[2]}'
-                    format_date = '%Y-%m-%d %H:%M'
-                    event_day = datetime.strptime(event_day, format_date)
+                    event_day = self.get_formatted_date(event_time)
                     self.items.append({
                         "title": title,
                         "body": event_body,
