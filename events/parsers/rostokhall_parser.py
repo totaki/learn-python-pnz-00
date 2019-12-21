@@ -7,26 +7,30 @@ from datetime import date
 loger = logging.getLogger(__name__)
 
 PLACE_DIR = {
-            "place_name": 'Rostokhall',
-            "city": "Penza",
-            "street": "Zlobina",
-            "house_number": "19"
-        }
-MONTH = enumerate(["января",
-                   "февраля",
-                   "марта",
-                   "апреля",
-                   "мая",
-                   "июня",
-                   "июля",
-                   "августа",
-                   "сентября",
-                   "октября",
-                   "ноября",
-                   "декабря"], 1)
-MONTH_REPLACE = {
+    "place_name": 'Rostokhall',
+    "city": "Penza",
+    "street": "Zlobina",
+    "house_number": "19"
+}
+MONTHS = [
+    "января",
+    "февраля",
+    "марта",
+    "апреля",
+    "мая",
+    "июня",
+    "июля",
+    "августа",
+    "сентября",
+    "октября",
+    "ноября",
+    "декабря"
+]
+
+
+MONTH_MAP = {
     month_name: '{:0>2}'.format(number)
-    for number, month_name in MONTH
+    for number, month_name in enumerate(MONTHS, 1)
 }
 
 
@@ -46,7 +50,6 @@ class RostokhallParser(BaseParser):
         Это метод должен парсить страницу и добавлять найденные events в
         items
         """
-
 
         soup = BeautifulSoup(html, 'html.parser')
         all_events = soup.findAll('section', class_='AfishaEvent')
