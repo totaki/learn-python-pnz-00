@@ -1,6 +1,6 @@
 import requests
 import logging
-from events.parsers.base_parser import BaseParser
+from parsers.base_parser import BaseParser
 from typing import List
 
 
@@ -23,5 +23,5 @@ class Fetcher:
                 parser.parse(result.text)
                 results.extend(parser.items)
             except (requests.RequestException, requests.Timeout):
-                logger.error(f'{result.status_code} Ошибка ответа удаленного сервера')
+                logger.error(f'Ошибка ответа удаленного сервера')
         return results
