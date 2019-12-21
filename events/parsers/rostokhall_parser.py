@@ -6,6 +6,29 @@ from datetime import date
 
 loger = logging.getLogger(__name__)
 
+PLACE_DIR = {
+            "place_name": 'Rostokhall',
+            "city": "Penza",
+            "street": "Zlobina",
+            "house_number": "19"
+        }
+MONTH = enumerate(["января",
+                   "февраля",
+                   "марта",
+                   "апреля",
+                   "мая",
+                   "июня",
+                   "июля",
+                   "августа",
+                   "сентября",
+                   "октября",
+                   "ноября",
+                   "декабря"], 1)
+MONTH_REPLACE = {
+    month_name: '{:0>2}'.format(number)
+    for number, month_name in MONTH
+}
+
 
 class RostokhallParser(BaseParser):
 
@@ -24,15 +47,7 @@ class RostokhallParser(BaseParser):
         items
         """
 
-        PLACE_DIR = {
-            "place_name": 'Rostokhall',
-            "city": "Penza",
-            "street": "Zlobina",
-            "house_number": "19"
-        }
-        MONTH_REPLACE = {"января": "01", "февраля": "02", "марта": "03", "апреля": "04", "мая": "05",
-                         "июня": "06", "июля": "07", "августа": "08", "сентября": "09", "октября": "10",
-                         "ноября": "11", "декабря": "12"}
+
         soup = BeautifulSoup(html, 'html.parser')
         all_events = soup.findAll('section', class_='AfishaEvent')
         if all_events:
@@ -48,6 +63,8 @@ class RostokhallParser(BaseParser):
                     month = event_time[1].lower()
                     month = MONTH_REPLACE[month]
                     event_day = f'{today.year}-{month}-{event_time[0]} {event_time[2]}'
+                    format_date = '%Y-%m-%d %H:%M'
+                    event_day = date.strptime(event_day, format_date)
                     self.items.append({
                         "title": title,
                         "body": event_body,
