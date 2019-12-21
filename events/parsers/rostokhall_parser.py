@@ -1,7 +1,7 @@
 import logging
 from typing import Tuple
 from bs4 import BeautifulSoup
-from events.parsers.base_parser import BaseParser
+from parsers.base_parser import BaseParser
 from datetime import date, datetime
 
 logger = logging.getLogger(__name__)
@@ -43,7 +43,7 @@ class RostokhallParser(BaseParser):
         - url
         - kwargs, которые будут добавлены в параметры запроса
         """
-        return ('get', "https://rostokhall.ru/afisha/", {})
+        return 'get', "https://rostokhall.ru/afisha/", {}
 
     def parse(self, html: str) -> None:
         """
