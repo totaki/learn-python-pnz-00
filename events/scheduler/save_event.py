@@ -19,7 +19,7 @@ def save_event(events: List) -> List:
                 office_number=event['office_number']
             )
             place = Place.objects.get(place_name=event['place_name'])
-        db_events = Event.objects.filter(title=event['title'])
+        db_events = Event.objects.filter(title=event['title'], event_time=event['event_time'])
         if not db_events:
             Event.objects.create(
                 title=event['title'],
@@ -30,18 +30,7 @@ def save_event(events: List) -> List:
             id_new = Event.objects.last().id
             id_new_events.append(id_new)
         else:
-            for db_event in db_events:
-                if db_event.body == event['body']:
-                    logger.info("The event is in the database")
-                else:
-                    Event.objects.create(
-                        title=event['title'],
-                        place=place,
-                        event_time=event['event_time'],
-                        body=event['body']
-                    )
-                    id_new = Event.objects.last().id
-                    id_new_events.append(id_new)
+            logger.info("The event is in the database")
     return id_new_events
 
 
