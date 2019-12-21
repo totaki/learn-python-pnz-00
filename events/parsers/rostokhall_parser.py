@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 from events.parsers.base_parser import BaseParser
 from datetime import date, datetime
 
-loger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 PLACE_DIR = {
     "place_name": 'Rostokhall',
@@ -75,6 +75,6 @@ class RostokhallParser(BaseParser):
                         **PLACE_DIR
                     })
                 except AttributeError:
-                    logging.error('AttributeError - Ошибка поиска по странице HTML, отсутствует тег для поиска')
+                    logger.error('AttributeError - Ошибка поиска по странице HTML, отсутствует тег для поиска')
         else:
-            logging.error('Ошибка, нет тэга "section, class_=AfishaEvent"')
+            logger.error('Ошибка, нет тэга "section, class_=AfishaEvent"')
