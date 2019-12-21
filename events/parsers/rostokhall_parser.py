@@ -2,7 +2,7 @@ import logging
 from typing import Tuple
 from bs4 import BeautifulSoup
 from events.parsers.base_parser import BaseParser
-from datetime import date
+from datetime import date, datetime
 
 loger = logging.getLogger(__name__)
 
@@ -64,10 +64,10 @@ class RostokhallParser(BaseParser):
                     event_time = event_time.split()
                     today = date.today()
                     month = event_time[1].lower()
-                    month = MONTH_REPLACE[month]
+                    month = MONTH_MAP[month]
                     event_day = f'{today.year}-{month}-{event_time[0]} {event_time[2]}'
                     format_date = '%Y-%m-%d %H:%M'
-                    event_day = date.strptime(event_day, format_date)
+                    event_day = datetime.strptime(event_day, format_date)
                     self.items.append({
                         "title": title,
                         "body": event_body,
