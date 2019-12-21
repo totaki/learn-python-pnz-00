@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 from events.parsers.base_parser import BaseParser
 from datetime import datetime
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -29,12 +28,21 @@ class BarParser(BaseParser):
             try:
                 title = div.find('div', class_='list-blog-name').text
                 body = div.find('div', class_='list-blog-descr').text
+                dt = datetime.utcnow()
+                event_dt = datetime(
+                    year=dt.year,
+                    month=dt.month,
+                    day=dt.day,
+                    hour=21,
+                    minute=00,
+                    second=0
+                )
 
                 self.items.append({
                     "title": title,
                     "body": body,
                     'place': 'Bar60',
-                    'time': datetime.now().strftime("%d.%m.%Y"),
+                    'time': event_dt,
                     'city': 'Penza',
                     'street': 'Moskovskaya 60'
                 })
