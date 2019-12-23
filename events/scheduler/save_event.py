@@ -25,7 +25,7 @@ def save_event(events: List) -> List:
         place = get_place(event)
         try:
             Event.objects.get(title=event['title'], event_time=event['event_time'])
-            print(f"The event {event['title']} is in the database")
+            logger.error(f"The event {event['title']} is in the database")
         except Event.DoesNotExist:
             new_event = Event.objects.create(
                 title=event['title'],
