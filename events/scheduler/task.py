@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class Task:
@@ -14,11 +14,10 @@ class Task:
         тут надо реализовать проверку того что мы должны запустить данные таск,
         в нашем случае просто проверяем что self.next меньше времени, которое мы передали
         """
-        if self.next < datetime:
-            return True
+        assert self.next < datetime
 
     def update_next(self):
         """
         Тут обновляем наш next
         """
-        self.next += self.timeout
+        self.next = datetime.utcnow()
