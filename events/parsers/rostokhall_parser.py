@@ -10,7 +10,8 @@ PLACE_DIR = {
     "place_name": 'Rostokhall',
     "city": "Penza",
     "street": "Zlobina",
-    "house_number": "19"
+    "house_number": "19",
+    "office_number": 0
 }
 MONTHS = [
     "января",
