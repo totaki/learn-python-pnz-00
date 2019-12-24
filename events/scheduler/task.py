@@ -20,4 +20,4 @@ class Task:
         """
         Тут обновляем наш next
         """
-        self.next = datetime.utcnow()
+        self.next = datetime.utcnow() + timedelta()
