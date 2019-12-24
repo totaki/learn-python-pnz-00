@@ -1,6 +1,4 @@
 from datetime import datetime, timedelta
-from fetcher.fetcher import Fetcher
-from handler.save_event import save_event
 
 
 class Task:
