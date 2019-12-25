@@ -1,10 +1,17 @@
 from django.core.management.base import BaseCommand
-from scheduler.scheduler import Scheduler
 from fetcher.fetcher import Fetcher
+from parsers.rostokhall_parser import RostokhallParser
+from parsers.bar60 import BarParser
+from scheduler.save_event import save_event
+from scheduler.task import Task
+from scheduler.scheduler import Scheduler
 
+PARSER_MAP = {
+    'parsers': [RostokhallParser(), BarParser()]
+}
 
-TASKS_MAP = {
-    'tasks': [Fetcher(), ]
+TASK_MAP = {
+    'tasks': [Task(10, Fetcher(PARSER_MAP['parsers']), save_event), ]
 }
 
 
@@ -15,7 +22,5 @@ class Command(BaseCommand):
         parser.add_argument('timeout', type=int)
 
     def handle(self, *args, **options):
-        tasks = TASKS_MAP[options['tasks']]
-        timeout = options['timeout']
-        scheduler = Scheduler(tasks, timeout)
+        scheduler = Scheduler(TASK_MAP[options['tasks']], options['timeout'])
         scheduler.run()
