@@ -51,7 +51,7 @@ class RostokhallParser(BaseParser):
         Это метод должен парсить страницу и добавлять найденные events в
         items
         """
-
+        self.items = []
         soup = BeautifulSoup(html, 'html.parser')
         all_events = soup.findAll('section', class_='AfishaEvent')
         if all_events:

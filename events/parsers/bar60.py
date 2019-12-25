@@ -25,7 +25,7 @@ class BarParser(BaseParser):
         Это метод должен парсить страницу и добавлять найденные events в
         items
         """
-
+        self.items = []
         soup = BeautifulSoup(html, 'lxml')
         divs = soup.find_all('div', class_='blog-event')
         for div in divs:
