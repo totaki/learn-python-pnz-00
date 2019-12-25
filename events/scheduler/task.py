@@ -8,7 +8,6 @@ class Task:
         self.callback = callback  # Сюда мы будем передавать результат, сохранить ивенты
         self.next = datetime.utcnow()
 
-    @property
     def need_run(self, datetime):
         """
         тут надо реализовать проверку того что мы должны запустить данные таск,
