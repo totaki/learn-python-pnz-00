@@ -24,7 +24,6 @@ class Scheduler:
                 date = datetime.utcnow()
                 if task.need_run(date):
                     result = task.runner()
-                    ids = task.callback(result)
+                    task.callback(result)
                     task.update_next()
             sleep(self.timeout)
-
