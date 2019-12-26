@@ -6,12 +6,9 @@ from scheduler.save_event import save_event
 from scheduler.task import Task
 from scheduler.scheduler import Scheduler
 
-PARSER_MAP = {
-    'parsers': [RostokhallParser(), BarParser()]
-}
 
 TASK_MAP = {
-    'tasks': [Task(10, Fetcher(PARSER_MAP['parsers']), save_event), ]
+    'tasks': [Task(10, Fetcher([RostokhallParser, BarParser]), save_event), ]
 }
 
 
