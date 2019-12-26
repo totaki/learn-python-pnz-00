@@ -34,6 +34,5 @@ def save_event(events: List) -> List:
                 body=event['body']
             )
             id_new_events.append(new_event.id)
-    return id_new_events
 
 
