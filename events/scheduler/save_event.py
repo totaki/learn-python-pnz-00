@@ -19,7 +19,7 @@ def get_place(event):
     return place
 
 
-def save_event(events: List) -> List:
+def save_event(events: List) -> None:
     id_new_events = []
     for event in events:
         place = get_place(event)
@@ -34,6 +34,5 @@ def save_event(events: List) -> List:
                 body=event['body']
             )
             id_new_events.append(new_event.id)
-    return id_new_events
 
 
