@@ -1,5 +1,5 @@
 from django.test import TestCase
-from handler.models import Event, Place
+from handler.models import Event, Place, User
 from scheduler.save_event import save_event
 
 
@@ -25,8 +25,16 @@ class SaveEventTestCase(TestCase):
         self.assertEqual(event.body, 'Трибьют группы Король и Шут')
         self.assertEqual(place.street, 'Пр-кт Строителей')
 
-    def test_dont_save_duplicate_event(self):
-        """Тест проверки на дублирование записи. При попытке записи имеющегося в базе события,
-        функция save_event возвращает пустой список."""
 
-        self.assertEqual(save_event(self.events), [])
+class SaveUserTestCase(TestCase):
+    def setUp(self):
+        User.objects.create(external_id='0001', name='Albert Einstein', creation_date='2019-12-27 13:00')
+        User.objects.create(external_id='0002', name='Max Born', creation_date='2019-12-27 13:01')
+
+    def test_user_model(self):
+        """Тест работы модели user"""
+        user_1 = User.objects.get(external_id='0001')
+        user_2 = User.objects.get(name='Max Born')
+        self.assertEqual(user_1.name, 'Albert Einstein')
+        self.assertEqual(user_2.external_id, '0002')
+
