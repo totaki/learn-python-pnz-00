@@ -8,6 +8,7 @@ class Event(models.Model):
     event_time = models.DateTimeField()
     body = models.TextField()
     tags = models.ManyToManyField('Tag')
+    handled = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -36,3 +37,8 @@ class User(models.Model):
     name = models.CharField(max_length=64)
     creation_date = models.DateTimeField()
     tags = models.ManyToManyField('Tag')
+
+
+class Notification(models.Model):
+    status_send = models.BooleanField(default=False)
+    event = models.ForeignKey('Event', on_delete=models.CASCADE, null=True)

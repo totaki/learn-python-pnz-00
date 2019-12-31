@@ -124,3 +124,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#Proxy settings
+
+PROXY = {
+    'proxy_url': 'socks5h://t1.learn.python.ru:1080',
+    'urllib3_proxy_kwargs': {
+        'username': 'learn',
+        'password': 'python'
+    }
+}
+
