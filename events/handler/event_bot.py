@@ -2,7 +2,7 @@ import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram.utils.request import Request
 from django.core.paginator import Paginator
-
+from datetime import datetime, timedelta
 from handler.models import User, Tag, Notification, Event
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
 
@@ -120,6 +120,20 @@ def unsubscribe(update, context):
     )
 
 
+def upcoming_events(update, context):
+    chat_id = update.effective_chat.id
+    logger.info(f'User {chat_id} asked upcoming events')
+    start_date = datetime.utcnow()
+    end_date = start_date + timedelta(days=60)
+    events = Event.objects.filter(event_time__range=(start_date, end_date))
+    for event in events:
+        text = f'{event.title} \n' \
+               f'{event.body} \n' \
+               f"{event.event_time.isoformat(sep=' ', timespec='minutes')}"
+        update.message.reply_text(text)
+
+
+
 def send_notifications(update, context, chat_id, event):
     context.bot.send_message(chat_id=chat_id, text=f'Новое событие по вашей подписке:'
                                                    f'{event.title}, {event.body}')
@@ -137,6 +151,7 @@ def event_bot(token, PROXY):
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("tags", tags))
     dp.add_handler(CommandHandler("unsubscribe", unsubscribe))
+    dp.add_handler(CommandHandler("events", upcoming_events))
     dp.add_handler(CallbackQueryHandler(change_notifications))
     dp.add_error_handler(error)
     updater.start_polling()
