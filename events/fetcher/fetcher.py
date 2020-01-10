@@ -1,14 +1,14 @@
 import requests
 import logging
 from parsers.base_parser import BaseParser
-from typing import List
+from typing import List, Type
 
 logger = logging.getLogger(__name__)
 
 
 class Fetcher:
 
-    def __init__(self, parsers: List[BaseParser]):
+    def __init__(self, parsers: List[Type[BaseParser]]):
         self.parsers = parsers
 
     def __call__(self, *args, **kwargs) -> List:
