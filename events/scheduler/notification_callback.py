@@ -15,4 +15,6 @@ def get_notification_runner(token, request_kwargs):
                     if user.id not in user_set:
                         send(user, notif_obj.event)
                         user_set.add(user.id)
+            notif_obj.status_send = True
+            notif_obj.save()
     return send_events

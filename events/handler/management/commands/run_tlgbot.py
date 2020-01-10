@@ -13,7 +13,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         token = options['token']
-        if token:
-            event_bot(token, PROXY)
-        else:
-            logger.error('Ошибка получения токена')
+        event_bot(token, PROXY)

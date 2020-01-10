@@ -4,17 +4,21 @@ from django.db import migrations
 
 
 def add_tags(apps, schema_editor):
-    tag = apps.get_model('handler', 'Tag')
-    tag.objects.create(title='Народная')
-    tag.objects.create(title='Опера')
-    tag.objects.create(title='Вокал')
-    tag.objects.create(title='Симфоническая')
-    tag.objects.create(title='Фолк')
-    tag.objects.create(title='Кантри')
-    tag.objects.create(title='Шансон')
-    tag.objects.create(title='Хаус')
-    tag.objects.create(title='Фолк')
-    tag.objects.create(title='Ска')
+    model_tag = apps.get_model('handler', 'Tag')
+    tags = [
+        'Народная',
+        'Вокал',
+        'Опера',
+        'Симфоническая',
+        'Фолк',
+        'Кантри',
+        'Шансон',
+        'Хаус',
+        'Фолк',
+        'Ска'
+    ]
+    for tag in tags:
+        model_tag.objects.create(title=tag)
 
 
 class Migration(migrations.Migration):

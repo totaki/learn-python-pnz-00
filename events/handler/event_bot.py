@@ -100,10 +100,10 @@ def get_event_notificator(token, request_kwargs):
     bot = Bot(token, request=request)
 
     def send(user, event):
-        name_event = event.title
-        date_event = event.event_time
+        event_name = event.title
+        event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
         chat = user.external_id
-        text = f'{name_event} выступает {date_event}'
+        text = f'{event_name} выступает {event_date[0]}'
         bot.send_message(chat, text)
     return send
 
@@ -120,23 +120,21 @@ def unsubscribe(update, context):
     )
 
 
-def upcoming_events(update, context):
+def get_upcoming_events(update, context):
     chat_id = update.effective_chat.id
     logger.info(f'User {chat_id} asked upcoming events')
     start_date = datetime.utcnow()
     end_date = start_date + timedelta(days=60)
     events = Event.objects.filter(event_time__range=(start_date, end_date))
     for event in events:
-        text = f'{event.title} \n' \
-               f'{event.body} \n' \
-               f"{event.event_time.isoformat(sep=' ', timespec='minutes')}"
+        event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
+        text = '\n'.join([event.title, event.body, event_date[0]])
         update.message.reply_text(text)
 
 
-
-def send_notifications(update, context, chat_id, event):
-    context.bot.send_message(chat_id=chat_id, text=f'Новое событие по вашей подписке:'
-                                                   f'{event.title}, {event.body}')
+# def send_notifications(update, context, chat_id, event):
+#     context.bot.send_message(chat_id=chat_id, text=f'Новое событие по вашей подписке:'
+#                                                    f'{event.title}, {event.body}')
 
 
 def error(update, context):
@@ -151,7 +149,7 @@ def event_bot(token, PROXY):
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("tags", tags))
     dp.add_handler(CommandHandler("unsubscribe", unsubscribe))
-    dp.add_handler(CommandHandler("events", upcoming_events))
+    dp.add_handler(CommandHandler("events", get_upcoming_events))
     dp.add_handler(CallbackQueryHandler(change_notifications))
     dp.add_error_handler(error)
     updater.start_polling()

@@ -9,7 +9,5 @@ def check_event():
         event.save()
         notification = Notification.objects.create(status_send=False, event=event)
         ids.append(notification.id)
-        notification.status_send = True
-        notification.save()
 
     return ids
