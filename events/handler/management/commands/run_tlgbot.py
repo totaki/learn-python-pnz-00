@@ -14,3 +14,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         token = options['token']
         event_bot(token, PROXY)
+

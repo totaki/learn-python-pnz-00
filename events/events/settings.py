@@ -125,6 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 #Proxy settings
 
 PROXY = {
