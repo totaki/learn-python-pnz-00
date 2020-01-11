@@ -1,0 +1,18 @@
+{% extends 'handler/base_page.html' %}
+
+{% block content %}
+    <div class="container mt-3">
+    <div class="row">
+        <h3>Места проведения событий:</h3>
+        <div class="col-3 offset-md-1">
+            {% for place in place_list %}
+            <li>
+                <h4>{{ place.place_name }}</h4>
+                <p>{{ place.city }}, {{ place.street }}, {{ place.house_number }}</p>
+            </li>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
