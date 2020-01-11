@@ -1,0 +1,34 @@
+{% extends 'handler/base_page.html' %}
+
+{% block tabs %}
+     <li class="nav-item">
+        <a class="nav-link active" id="event-tab" data-toggle="tab" href="#event" role="tab" aria-controls="event"
+           aria-selected="true">Предстоящие события</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="old_event-tab" data-toggle="tab" href="#old_event" role="tab" aria-controls="old_event"
+           aria-selected="false">Прошедшие события</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="place/">Места проведения событий</a>
+    </li>
+{% endblock %}
+
+{% block content %}
+    <div class="tab-content mt-2" id="myTabContent">
+        <div class="tab-pane fade show active" id="event" role="tabpanel" aria-labelledby="event-tab">
+            <ul>
+                {% for event in event_list %}
+                    <li>
+                        <h4>{{ event.title }}</h4>
+                        <p>{{ event.body }}</p>
+                        <p>{{ event.event_time }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="old_event" role="tabpanel" aria-labelledby="old_event-tab">
+            <p>Прошедших событий пока нет</p>
+        </div>
+    </div>
+{% endblock %}
