@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'notification_controller',
     'parsers',
     'scheduler',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -133,5 +134,11 @@ PROXY = {
         'username': 'learn',
         'password': 'python'
     }
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5
 }
 

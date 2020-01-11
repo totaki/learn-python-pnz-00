@@ -10,6 +10,10 @@ class Event(models.Model):
     tags = models.ManyToManyField('Tag')
     handled = models.BooleanField(default=False)
 
+    # @property
+    # def place_name(self):
+    #     return self.place.place_name
+
     def __str__(self):
         return self.title
       
