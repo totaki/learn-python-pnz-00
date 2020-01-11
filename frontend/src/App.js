@@ -4,10 +4,10 @@ import Places, { PLACES_ROUTE } from "./Places";
 import './App.css';
 import './bootstrap.min.css';
 
-function Router({ route }) {
+function Router({ route, setRoute }) {
   switch (route) {
     case EVENTS_ROUTE:
-      return <Events/>;
+      return <Events setRoute={setRoute}/>;
     case PLACES_ROUTE:
       return <Places/>;
     default:
@@ -18,13 +18,13 @@ function Router({ route }) {
 function App() {
   const [route, setRoute] = useState(EVENTS_ROUTE);
   return (
-    <div className="App">
+    <div className="container">
       <ul>
         <li><a onClick={() => setRoute(EVENTS_ROUTE)}>Events</a></li>
         <li><a onClick={() => setRoute(PLACES_ROUTE)}>Places</a></li>
       </ul>
       <div>
-        <Router route={route}/>
+        <Router route={route} setRoute={setRoute}/>
       </div>
     </div>
   );
