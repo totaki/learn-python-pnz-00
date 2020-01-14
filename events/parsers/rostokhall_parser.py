@@ -46,13 +46,13 @@ class RostokhallParser(BaseParser):
         """
         return 'get', "https://rostokhall.ru/afisha/", {}
 
-    def parse(self, html: str) -> None:
+    def parse(self, html) -> None:
         """
         Это метод должен парсить страницу и добавлять найденные events в
         items
         """
 
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup(html.text, 'html.parser')
         all_events = soup.findAll('section', class_='AfishaEvent')
         if all_events:
             for event in all_events:

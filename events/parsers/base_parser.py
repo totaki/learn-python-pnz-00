@@ -18,7 +18,7 @@ class BaseParser(ABC):
         pass
 
     @abstractmethod
-    def parse(self, string: str) -> None:
+    def parse(self, obj) -> None:
         """
         Это метод должен парсить страницу и добавлять найденные events в
         items

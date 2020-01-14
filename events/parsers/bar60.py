@@ -20,13 +20,13 @@ class BarParser(BaseParser):
     def get_request_params(self) -> Tuple[str, str, dict]:
         return 'get', 'http://bar60.ru/events', {}
 
-    def parse(self, html: str) -> None:
+    def parse(self, html) -> None:
         """
         Это метод должен парсить страницу и добавлять найденные events в
         items
         """
 
-        soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html.text, 'lxml')
         divs = soup.find_all('div', class_='blog-event')
         for div in divs:
             try:
