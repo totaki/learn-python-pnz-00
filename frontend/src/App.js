@@ -19,10 +19,16 @@ function App() {
   const [route, setRoute] = useState(EVENTS_ROUTE);
   return (
     <div className="container">
-      <ul>
-        <li><a onClick={() => setRoute(EVENTS_ROUTE)}>Events</a></li>
-        <li><a onClick={() => setRoute(PLACES_ROUTE)}>Places</a></li>
-      </ul>
+      <nav className="navbar navbar-expand-lg navbar-light">
+        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div className="navbar-nav">
+            <a className=" navbar-brand nav-link" href="#" onClick={() => setRoute(EVENTS_ROUTE)}>
+              Events <span className="sr-only">(current)</span>
+            </a>
+            <a className="navbar-brand nav-link" href="#" onClick={() => setRoute(PLACES_ROUTE)}>Places</a>
+          </div>
+        </div>
+      </nav>
       <div>
         <Router route={route} setRoute={setRoute}/>
       </div>

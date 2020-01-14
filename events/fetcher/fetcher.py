@@ -18,10 +18,11 @@ class Fetcher:
             method, url, params = parser_obj.get_request_params()
             pars_func = getattr(requests, method)
             try:
-                result = pars_func(url, **params)
+                result = pars_func(url, params)
                 result.raise_for_status()
-                parser_obj.parse(result.text)
+                parser_obj.parse(result)
                 results.extend(parser_obj.items)
             except (requests.RequestException, requests.Timeout):
                 logger.error(f'Ошибка ответа удаленного сервера')
         return results
+

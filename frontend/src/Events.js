@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { BASE_API_URL } from "./const";
+import Pagination from "./Pagination";
+
 const EVENTS_ROUTE = 'events';
 
 
-function Event({ title, body, event_time }) {
+function Event({ title, body, event_date }) {
   return (
-    <div className="card">
-      <div className="card-body">
-        <h5 className="card-title">{title}</h5>
-        <p className="card-text">{body}</p>
-        <p>{event_time}</p>
-      </div>
-    </div>
+
+        <div className="col-md-4">
+          <div className="card mb-4 shadow-sm">
+            <div className="card-body">
+              <h5 className="card-title">{title}</h5>
+              <p className="card-text">{body}</p>
+              <p>{event_date}</p>
+            </div>
+          </div>
+        </div>
+
   )
 }
+
 
 function Events({ setRoute }) {
   const [events, setEvents] = useState([]);
@@ -34,13 +41,19 @@ function Events({ setRoute }) {
 
   return (
     <>
-      <div>Список мероприятий</div>
-      {events.map((e, i) => <Event {...e}/>)}
-      <div className="btn-group" role="group" aria-label="paginationGroup">
-        {previous ? <button  type="button" className="btn btn-secondary" onClick={() => setURL(previous)}>Previous</button> : null}
-        {next ? <button  type="button" className="btn btn-secondary" onClick={() => setURL(next)}>Next</button> : null}
+      <div className="container">
+        <h1 style={{textAlign: "center"}}>Список мероприятий</h1>
+          <div className="container">
+            <div className="row">
+              {events.map((e, i) => <Event {...e}/>)}
+              </div>
+          </div>
+        <Pagination
+          next={next}
+          previous={previous}
+          setURL={setURL}
+        />
       </div>
-      <button onClick={() => setRoute('places')}>Places</button>
     </>
   )
 }

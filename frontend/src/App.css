@@ -1,2 +1,9 @@
 .App {
 }
+.navbar{
+    background-color: #f9e10a;
+}
+
+.card-text {
+    height: 150px;
+}
