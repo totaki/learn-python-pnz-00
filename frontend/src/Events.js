@@ -49,8 +49,8 @@ function Events({ setRoute }) {
               </div>
           </div>
         <Pagination
-          n={next}
-          p={previous}
+          next={next}
+          previous={previous}
           setURL={setURL}
         />
       </div>
