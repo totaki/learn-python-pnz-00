@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from handler.models import Event, Place
 from datetime import datetime, timedelta
-from rest_framework import viewsets, status
-from rest_framework.views import APIView
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework import viewsets
+
 
 from handler.serializers import EventsSerializer, PlaceSerializer
 
@@ -39,10 +37,6 @@ class PlaceViewSet(viewsets.ModelViewSet):
     serializer_class = PlaceSerializer
 
 
-# class SetEventView(viewsets.ModelViewSet):
-#     queryset = Event.objects.all()
-#     serializer_class = SetEventsSerializer
-#
 
 
 

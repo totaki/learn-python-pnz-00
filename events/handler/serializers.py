@@ -23,14 +23,3 @@ class PlaceSerializer(serializers.HyperlinkedModelSerializer):
         model = Place
         fields = '__all__'
 
-
-# class SetEventsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Event
-#         fields = ['title', 'body', 'event_time']
-#
-#     def create(self, validated_data):
-#         """
-#         Create and return a new `Event` instance, given the validated data.
-#         """
-#         return Event.objects.create(**validated_data)
