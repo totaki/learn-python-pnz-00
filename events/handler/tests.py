@@ -1,7 +1,5 @@
 import pytest
-from django.contrib.auth.models import User
 from rest_framework.test import RequestsClient
-from rest_framework.test import force_authenticate, APIRequestFactory
 
 
 @pytest.mark.django_db
@@ -31,17 +29,17 @@ def test_post_place():
 @pytest.mark.django_db
 def test_post_event():
     client = RequestsClient()
-    # payload = {
-    #     "place_name": 'Heror',
-    #     "city": "Penza",
-    #     "street": "Zlobina",
-    #     "house_number": "19",
-    #     "office_number": 0
-    # }
-    # headers = {
-    #     'Content-Type': 'application/json'
-    # }
-    # client.post('http://localhost:8000/api/v1/places/', json=payload, headers=headers)
+    payload = {
+        "place_name": 'Heror',
+        "city": "Penza",
+        "street": "Zlobina",
+        "house_number": "19",
+        "office_number": 0
+    }
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    client.post('http://localhost:8000/api/v1/places/', json=payload, headers=headers)
 
     payload = {
         "title": "КиШ",
