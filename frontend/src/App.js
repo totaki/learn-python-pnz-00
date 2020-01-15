@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Events, { EVENTS_ROUTE } from "./Events";
 import Places, { PLACES_ROUTE } from "./Places";
+import Add_event, { ADD_EVENT_ROUTE } from "./Addevent";
 import './App.css';
 import './bootstrap.min.css';
 
@@ -10,6 +11,8 @@ function Router({ route, setRoute }) {
       return <Events setRoute={setRoute}/>;
     case PLACES_ROUTE:
       return <Places/>;
+    case ADD_EVENT_ROUTE:
+      return  <Add_event/>;
     default:
       return <p>Route not found</p>
   }
@@ -26,6 +29,7 @@ function App() {
               Events <span className="sr-only">(current)</span>
             </a>
             <a className="navbar-brand nav-link" href="#" onClick={() => setRoute(PLACES_ROUTE)}>Places</a>
+            <a className="navbar-brand nav-link" href="#" onClick={() => setRoute(ADD_EVENT_ROUTE)}>Add Event</a>
           </div>
         </div>
       </nav>

@@ -42,7 +42,7 @@ function Events({ setRoute }) {
   return (
     <>
       <div className="container">
-        <h1 style={{textAlign: "center"}}>Список мероприятий</h1>
+        <h2 style={{textAlign: "center"}}>Список мероприятий</h2>
           <div className="container">
             <div className="row">
               {events.map((e, i) => <Event {...e}/>)}

@@ -33,7 +33,7 @@ function Places() {
    return (
     <>
       <div className="container">
-        <div className="my-h1"><h1 style={{textAlign: "center"}}>Список заведений</h1></div>
+        <div className="my-h1"><h2 style={{textAlign: "center"}}>Список заведений</h2></div>
           <div className="container">
             <div className="row">
               {places.map((e, i) => <Place {...e}/>)}

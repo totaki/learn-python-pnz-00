@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from handler.models import Event, Place
 from datetime import datetime, timedelta
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.views import APIView
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
-from handler.serializers import EventsSerializer, PlaceSerializer
+from handler.serializers import EventsSerializer, PlaceSerializer, SetEventsSerializer
 
 
 def index(request):
@@ -20,7 +23,7 @@ def place(request):
     return render(request, 'handler/place.html', context)
 
 
-class EventViewSet(viewsets.ReadOnlyModelViewSet):
+class EventViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
@@ -34,3 +37,12 @@ class PlaceViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer
+
+
+class SetEventView(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
+    serializer_class = SetEventsSerializer
+
+
+
+
