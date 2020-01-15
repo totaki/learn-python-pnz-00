@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from handler.serializers import EventsSerializer, PlaceSerializer, SetEventsSerializer
+from handler.serializers import EventsSerializer, PlaceSerializer
 
 
 def index(request):
@@ -31,7 +31,7 @@ class EventViewSet(viewsets.ModelViewSet):
     serializer_class = EventsSerializer
 
 
-class PlaceViewSet(viewsets.ReadOnlyModelViewSet):
+class PlaceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows groups to be viewed or edited.
     """
@@ -39,10 +39,10 @@ class PlaceViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PlaceSerializer
 
 
-class SetEventView(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = SetEventsSerializer
-
+# class SetEventView(viewsets.ModelViewSet):
+#     queryset = Event.objects.all()
+#     serializer_class = SetEventsSerializer
+#
 
 
 

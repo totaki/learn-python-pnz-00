@@ -6,7 +6,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'events', views.EventViewSet)
 router.register(r'places', views.PlaceViewSet)
-router.register(r'setevent', views.SetEventView)
+# router.register(r'setevent', views.SetEventView)
 
 
 urlpatterns = [

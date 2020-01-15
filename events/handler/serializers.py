@@ -3,12 +3,12 @@ from rest_framework import serializers
 
 
 class EventsSerializer(serializers.HyperlinkedModelSerializer):
-    place_name = serializers.SerializerMethodField()
-    event_date = serializers.SerializerMethodField()
+    place_name = serializers.SerializerMethodField(read_only=True)
+    event_date = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Event
-        fields = ['title', 'place', 'body', 'event_date', 'place_name']
+        fields = ['title', 'place', 'body', 'event_date', 'place_name', 'event_time']
 
     def get_place_name(self, obj):
         return f'{obj.place.place_name}'
@@ -24,13 +24,13 @@ class PlaceSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class SetEventsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        fields = ['title', 'body', 'event_time']
-
-    def create(self, validated_data):
-        """
-        Create and return a new `Event` instance, given the validated data.
-        """
-        return Event.objects.create(**validated_data)
+# class SetEventsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Event
+#         fields = ['title', 'body', 'event_time']
+#
+#     def create(self, validated_data):
+#         """
+#         Create and return a new `Event` instance, given the validated data.
+#         """
+#         return Event.objects.create(**validated_data)
