@@ -3,12 +3,12 @@ from rest_framework import serializers
 
 
 class EventsSerializer(serializers.HyperlinkedModelSerializer):
-    place_name = serializers.SerializerMethodField()
-    event_date = serializers.SerializerMethodField()
+    place_name = serializers.SerializerMethodField(read_only=True)
+    event_date = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Event
-        fields = ['title', 'place', 'body', 'event_date', 'place_name']
+        fields = ['title', 'place', 'body', 'event_date', 'place_name', 'event_time']
 
     def get_place_name(self, obj):
         return f'{obj.place.place_name}'

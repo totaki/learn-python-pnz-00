@@ -40,19 +40,26 @@ from scheduler.save_event import save_event
 #         self.assertEqual(user_1.name, 'Albert Einstein')
 #         self.assertEqual(user_2.external_id, '0002')
 
-class SaveEventTestCase(TestCase):
-    def setUp(self):
-        self.payload = {'fields': {
-            'title': "Король Вечного Сна",
-            'body': "Трибьют группы Король и Шут",
-            'event_time': "2020-01-06 19:00:00",
-            }
-        }
-        self.url = 'http://localhost:8000/api/v1/setevent/'
+# class SaveEventTestCase(TestCase):
+#     def setUp(self):
+#         self.payload = {
+#             'fields': {
+#                 'title': "Король Вечного Сна",
+#                 'body': "Трибьют группы Король и Шут",
+#                 'event_time': "2020-01-06 19:00:00",
+#             }
+#         }
+#         self.url = 'http://localhost:8000/api/v1/setevent/'
+#
+#     def test_save_event(self):
+#         """Тест post запроса к серверу"""
+#
+#         r = requests.post(self.url, json=self.payload, headers={'Content-Type': 'application/json', 'Accept': 'application/json'})
+#         self.assertEqual(r.status_code, 200)
+#
+import pytest
 
-    def test_save_event(self):
-        """Тест post запроса к серверу"""
 
-        r = requests.post(self.url, json=self.payload, headers={'Content-Type': 'application/json', 'Accept': 'application/json'})
-        self.assertEqual(r.status_code, 200)
-
+@pytest.mark.django_db
+def test_create_event():
+    pass
