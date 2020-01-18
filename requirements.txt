@@ -22,6 +22,7 @@ pycparser==2.19
 pyparsing==2.4.5
 PySocks==1.7.1
 pytest==5.3.2
+pytest-django==3.8.0
 python-telegram-bot==12.2.0
 pytz==2019.3
 requests==2.22.0

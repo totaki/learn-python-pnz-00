@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {BASE_API_URL} from "./const";
+import {getItems} from "./api";
 
 const PLACES_ROUTE = 'places';
 
@@ -19,21 +19,16 @@ function Place({ place_name, city, street, house_number }) {
 
 function Places() {
    const [places, setPlaces] = useState([]);
-   const [url, setURL] = useState(`${BASE_API_URL}/places/`);
+   const [path, _] = useState('/places/');
 
    useEffect(() => {
-    fetch(url)
-      .then(result => result.json())
-      .then(json => {
-        setPlaces(json.results);
-      })
-      .catch(e => console.log(e));
-  }, [url]);
+     getItems({ path }, (j) => setPlaces(j.results))
+   }, [path]);
 
    return (
     <>
       <div className="container">
-        <div className="my-h1"><h1 style={{textAlign: "center"}}>Список заведений</h1></div>
+        <div className="my-h1"><h2 style={{textAlign: "center"}}>Список заведений</h2></div>
           <div className="container">
             <div className="row">
               {places.map((e, i) => <Place {...e}/>)}
