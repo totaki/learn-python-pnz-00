@@ -1,5 +1,7 @@
+import traceback
 from handler.models import Event, Place
 from rest_framework import serializers
+from rest_framework.utils import html, model_meta, representation
 
 
 class EventsSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,4 +24,3 @@ class PlaceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Place
         fields = '__all__'
-

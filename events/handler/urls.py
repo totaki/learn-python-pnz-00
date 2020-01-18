@@ -1,16 +1,13 @@
 from django.urls import path, include
-from . import views
 from rest_framework import routers
+from handler.views import EventViewSet, PlaceViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'events', views.EventViewSet)
-router.register(r'places', views.PlaceViewSet)
+router.register(r'events', EventViewSet)
+router.register(r'places', PlaceViewSet)
 
 
 urlpatterns = [
-    # ex: /handler/
-    path('', views.index, name='index'),
-    path('place/', views.place, name='place'),
     path('api/v1/', include(router.urls))
 ]

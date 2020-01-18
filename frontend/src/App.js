@@ -20,6 +20,7 @@ function Router({ route, setRoute }) {
 
 function App() {
   const [route, setRoute] = useState(EVENTS_ROUTE);
+  console.log(window.location.path)
   return (
     <div className="container">
       <nav className="navbar navbar-expand-lg navbar-light">

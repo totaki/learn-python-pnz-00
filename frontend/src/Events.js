@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { BASE_API_URL } from "./const";
 import Pagination from "./Pagination";
+import {getItems} from "./api";
 
 const EVENTS_ROUTE = 'events';
 
@@ -23,18 +23,18 @@ function Event({ title, body, event_date }) {
 
 
 function Events({ setRoute }) {
+  const path = '/events/';
   const [events, setEvents] = useState([]);
-  const [url, setURL] = useState(`${BASE_API_URL}/events/`);
+  const [url, setURL] = useState(null);
   const [pagination, setPagination] = useState([null, null]);
 
+  const fetchCallback = (j) => {
+      setEvents(j.results);
+      setPagination([j.next, j.previous])
+  };
+
   useEffect(() => {
-    fetch(url)
-      .then(result => result.json())
-      .then(json => {
-        setEvents(json.results);
-        setPagination([json.next, json.previous])
-      })
-      .catch(e => console.log(e));
+    getItems({ url, path }, fetchCallback)
   }, [url]);
 
   const [next, previous] = pagination;

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {BASE_API_URL} from "./const";
+import SendForm from "./somesend";
 
 
 const ADD_EVENT_ROUTE = 'add_event';
@@ -199,7 +200,8 @@ class AddEvent extends React.Component {
     <>
       <div className="container">
         <div className="my-h1"><h3 style={{textAlign: "center"}}>Форма для добавления Событий</h3></div>
-        < AddEvent />
+        < SendForm/>
+        {/*< AddEvent />*/}
       </div>
     </>
     )
