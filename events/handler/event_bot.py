@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from handler.models import User, Tag, Notification, Event
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger(__name__)
 
@@ -132,9 +133,13 @@ def get_upcoming_events(update, context):
         update.message.reply_text(text)
 
 
-# def send_notifications(update, context, chat_id, event):
-#     context.bot.send_message(chat_id=chat_id, text=f'Новое событие по вашей подписке:'
-#                                                    f'{event.title}, {event.body}')
+def auth(update, context):
+    chat_id = update.effective_chat.id
+    user = User.objects.get(external_id=chat_id)
+    token = Token.objects.create(user=user)
+    URL = 'http://localhost:3000/auth'
+    request = f'{URL}?token={token.key}'
+    update.message.reply_text(request)
 
 
 def error(update, context):
@@ -150,6 +155,7 @@ def event_bot(token, PROXY):
     dp.add_handler(CommandHandler("tags", tags))
     dp.add_handler(CommandHandler("unsubscribe", unsubscribe))
     dp.add_handler(CommandHandler("events", get_upcoming_events))
+    dp.add_handler(CommandHandler("auth", auth))
     dp.add_handler(CallbackQueryHandler(change_notifications))
     dp.add_error_handler(error)
     updater.start_polling()
