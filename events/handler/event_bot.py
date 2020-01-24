@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from handler.models import User, Tag, Notification, Event
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
 from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User as Auth_user
 
 logger = logging.getLogger(__name__)
 
@@ -21,10 +22,12 @@ def start(update, context):
     try:
         User.objects.get(external_id=user_id)
         logger.error(f"The user {username} is in the database")
-        update.message.reply_text('We already met.')
+        update.message.reply_text('Мы уже знакомы.')
     except User.DoesNotExist:
-        User.objects.create(external_id=user_id, name=username, creation_date=message_date)
-        update.message.reply_text(f'Hi, {username}! Your id {user_id}. Now is {message_date}')
+        auth_name = f'telegram_{user_id}'
+        auth_user = Auth_user.objects.create(username=auth_name)
+        User.objects.create(external_id=user_id, name=username, creation_date=message_date, user=auth_user)
+        update.message.reply_text(f'Привет, {username}! Вы зарегистрированы {message_date}')
 
 
 def tags(update, context):
@@ -86,10 +89,10 @@ def change_notifications(update, context):
         user = User.objects.get(external_id=chat_id)
         if int(subscribe) == 1:
             user.tags.add(tag)
-            message = f'You are subscribed to {tag.title}'
+            message = f'Вы подписаны на {tag.title}'
         elif int(subscribe) == 0:
             user.tags.remove(tag)
-            message = f'You are unsubscribe to {tag.title}'
+            message = f'Вы отписаны от {tag.title}'
     elif prefix == TAG_PAGINATOR_PREFIX:
         reply_markup = get_tags(chat_id, answer, subscribe)
         message = update.effective_message.text
@@ -116,7 +119,7 @@ def unsubscribe(update, context):
     logger.info("User %s started unsubscribe session.", user.first_name)
     reply_markup = get_tags(chat_id, subscribe=0)
     update.message.reply_text(
-        'Choose a tag for unsubscribe',
+        'Выберите тег для подписки',
         reply_markup=reply_markup
     )
 
@@ -136,7 +139,8 @@ def get_upcoming_events(update, context):
 def auth(update, context):
     chat_id = update.effective_chat.id
     user = User.objects.get(external_id=chat_id)
-    token = Token.objects.create(user=user)
+    auth_user = Auth_user.objects.get(id=user.user_id)
+    token = Token.objects.create(user=auth_user)
     URL = 'http://localhost:3000/auth'
     request = f'{URL}?token={token.key}'
     update.message.reply_text(request)

@@ -19,7 +19,7 @@ function Place({ place_name, city, street, house_number }) {
 
 function Places() {
    const [places, setPlaces] = useState([]);
-   const [path, _] = useState('/places/');
+   const [path, _] = useState('/public/places/');
 
    useEffect(() => {
      getItems({ path }, (j) => setPlaces(j.results))
@@ -27,9 +27,9 @@ function Places() {
 
    return (
     <>
-      <div className="container">
+      <div>
         <div className="my-h1"><h2 style={{textAlign: "center"}}>Список заведений</h2></div>
-          <div className="container">
+          <div>
             <div className="row">
               {places.map((e, i) => <Place {...e}/>)}
             </div>

@@ -7,7 +7,7 @@ const send = ({ current }, callback) => {
   };
 
   const sendEvent = ({url}) => {
-    alert(url)
+    alert(url);
     let event = {
       "title": getValue("title"),
       "body": getValue("body"),

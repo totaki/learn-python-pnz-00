@@ -1,6 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
-from handler.models import Place, Event
+from handler.models import Place, Event, Tag
 
 
 @pytest.fixture
@@ -30,11 +30,11 @@ def place(place_data):
 
 @pytest.fixture
 def event_data(req, place):
-    place_response = req('get', f'/api/v1/places/{place.id}/')
-    place_url = place_response.json()['url']
+    place_response = req('get', f'/api/v1/public/places/{place.id}/')
+    place_id = place_response.json()['id']
     return {
             "title": "КиШ",
-            "place": place_url,
+            "place": place_id,
             "body": "Князь без Горшка",
             "event_time": "2020-01-13T21:00:00Z"
     }
@@ -44,3 +44,12 @@ def event_data(req, place):
 def event(event_data, place):
     event_data['place'] = place
     return Event.objects.create(**event_data)
+
+
+@pytest.fixture
+def tag():
+    tag = {
+     "title": "Народная"
+    }
+    return Tag.objects.create(**tag)
+

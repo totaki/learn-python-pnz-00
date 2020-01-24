@@ -23,7 +23,7 @@ function Event({ title, body, event_date }) {
 
 
 function Events({ setRoute }) {
-  const path = '/events/';
+  const path = '/public/events/';
   const [events, setEvents] = useState([]);
   const [url, setURL] = useState(null);
   const [pagination, setPagination] = useState([null, null]);
@@ -41,9 +41,9 @@ function Events({ setRoute }) {
 
   return (
     <>
-      <div className="container">
+      <div>
         <h2 style={{textAlign: "center"}}>Список мероприятий</h2>
-          <div className="container">
+          <div>
             <div className="row">
               {events.map((e, i) => <Event {...e}/>)}
               </div>
