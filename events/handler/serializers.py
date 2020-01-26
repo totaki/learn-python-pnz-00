@@ -3,7 +3,7 @@ from rest_framework.authtoken.models import Token
 
 from rest_framework import serializers
 
-from handler.models import Event, Place, Tag
+from handler.models import Event, Place, Tag, User as AppUser
 from django.contrib.auth.models import User
 
 
@@ -30,12 +30,19 @@ class PlaceSerializer(serializers.ModelSerializer):
 
 
 class PrivatePlaceSerializer(serializers.ModelSerializer):
+
     class Meta:
-        model = User
-        fields = ['id', 'username']
+        model = Place
+        fields = '__all__'
 
 
 class TagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'
+
+
+class MeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppUser
         fields = '__all__'

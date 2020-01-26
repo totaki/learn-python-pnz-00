@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {getItems} from "./api";
 
-const PLACES_ROUTE = 'places';
 
 function Place({ place_name, city, street, house_number }) {
   return (
@@ -40,6 +39,4 @@ function Places() {
 }
 
 export default Places
-export {
-  PLACES_ROUTE
-}
+

@@ -1,7 +1,20 @@
 import React, {useState, useEffect, useRef} from "react";
 import {BASE_API_URL} from "./const";
 import {getItems} from "./api";
-import Places from "./Places";
+
+
+function send({ current }, callback){
+// Функция send отправляет данные из формы в api
+
+  const getValue = name => {
+  //Функция для заполнения данными из формы объекта наподобие массива
+    return current.elements.namedItem(name).value;
+  };
+
+
+
+
+}
 
 
 function PushPlaces({place_name}) {
@@ -9,13 +22,18 @@ function PushPlaces({place_name}) {
 }
 
 function Send_event() {
+// Здесь я объявляю переменные для отправки
+  const [result, setResult] = useState({});
+  const formRef = useRef(null);
+
+//В этом блоке я подгружаю все известные места в форму
   const [places, setPlaces] = useState([]);
   const [path, _] = useState('/public/places/');
 
   useEffect(() => {
     getItems({path}, (j) => setPlaces(j.results))
   }, [path]);
-
+//
   return (
     <form>
       <div className="form-row">
@@ -67,7 +85,7 @@ function Send_event() {
           {places.map((e, i) => <PushPlaces {...e}/>)}
         </select>
       </div>
-      {/*<button type="submit" className="btn btn-primary" onClick={() => send(formRef, setResult)}>Send</button>*/}
+      <button type="submit" className="btn btn-primary" onClick={() => send(formRef, setResult)}>Send</button>
     </form>
   );
 }

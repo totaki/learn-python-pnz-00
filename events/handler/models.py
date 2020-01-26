@@ -41,7 +41,7 @@ class Place(models.Model):
 class User(models.Model):
     external_id = models.CharField(max_length=32)
     name = models.CharField(max_length=64)
-    creation_date = models.DateTimeField()
+    creation_date = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField('Tag')
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,

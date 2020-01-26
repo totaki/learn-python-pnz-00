@@ -1,4 +1,4 @@
-const BASE_API_URL = 'http://127.0.0.1:8000/api/v1';
+import {BASE_API_URL} from "./const";
 
 export const getItems = ({ url, path }, callback) => {
   const fullUrl = url || `${BASE_API_URL}${path}`;

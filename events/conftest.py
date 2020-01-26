@@ -1,13 +1,17 @@
 import pytest
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
-from handler.models import Place, Event, Tag
+from handler.models import Place, Event, Tag, User
+from django.contrib.auth.models import User as DjangoUser
 
 
 @pytest.fixture
 def req():
     client = APIClient()
 
-    def _(method, url, body=None):
+    def _(method, url, body=None, token=None):
+        if token:
+            client.credentials(HTTP_AUTHORIZATION='Token ' + token.key)
         return getattr(client, method)(url, body, format='json')
     return _
 
@@ -53,3 +57,19 @@ def tag():
     }
     return Tag.objects.create(**tag)
 
+
+@pytest.fixture
+def user():
+    external_id = '0000000000'
+    username = f'telegram_{external_id}'
+    django_user = DjangoUser.objects.create(username=username)
+    return User.objects.create(name='test_user', external_id=external_id, user=django_user)
+
+
+@pytest.fixture
+def auth_req(req, user):
+    token = Token.objects.create(user=user.user)
+
+    def _(method, url, body=None):
+        return req(method, url, body, token=token)
+    return _

@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useRef} from "react";
-import {BASE_API_URL} from "./const";
-
+import React, { useRef} from "react";
+import { useHistory } from "react-router-dom";
 
 const send = ({current}, callback) => {
   const getValue = name => {
@@ -14,15 +13,13 @@ const send = ({current}, callback) => {
     "house_number": getValue("house_number"),
     "office_number": getValue("office_number"),
   };
-  const path = '/places/';
-  const url = 'http://127.0.0.1:8000/api/v1/public/places/';
   const token = window.localStorage.getItem('token');
-  // const full_token = 'Token '`${token}`;
 
-  fetch(url, {
+  fetch('http://127.0.0.1:8000/api/v1/private/places', {
     method: 'POST',
     headers: {
       'Content-type': 'application/json; charset=utf-8',
+      'Authorization': `Token ${token}`
     },
     body: JSON.stringify(place)
   })
@@ -31,48 +28,44 @@ const send = ({current}, callback) => {
 
 };
 
-// const Success_send = ({json}) => {
-//   const name = json['result']['place_name'];
-//   alert({name});
-// };
-
-function Send_place() {
-  const [result, setResult] = useState({});
+function PlaceForm() {
   const formRef = useRef(null);
+  const history = useHistory()
 
   return (
-    <form className="App" ref={formRef} id="_sone">
+    <>
+    <form className="App" ref={formRef} id="placeForm">
       <div className="form-row">
         <div className="form-group col-md-4">
           <label htmlFor="inputAddress">Место проведения</label>
-          <input type="text" className="form-control" name="place_name" placeholder="Название"/>
+          <input type="text" className="form-control" name="place_name" placeholder="Название" value="Test place"/>
         </div>
       </div>
       <div className="form-row">
         <div className="form-group col-md-4">
           <label htmlFor="inputCity">Город</label>
-          <input type="text" className="form-control" name="city" />
+          <input type="text" className="form-control" name="city" value="Penza"/>
         </div>
         <div className="form-group col-md-4">
           <label htmlFor="inputStreet">Улица</label>
-          <input type="text" className="form-control" name="street" />
+          <input type="text" className="form-control" name="street" value="Moskovskiy"/>
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="inputHouse">Дом</label>
-          <input type="text" className="form-control" name="house_number" />
+          <input type="text" className="form-control" name="house_number" value="10"/>
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="inputOffice">Офис</label>
-          <input type="text" className="form-control" name="office_number" />
+          <input type="text" className="form-control" name="office_number" value="10"/>
         </div>
       </div>
-      <button type="submit" className="btn btn-primary" onClick={() => send(formRef, setResult)}>Send</button>
     </form>
+    <button className="btn btn-primary" onClick={() => send(formRef, () => history.push('/places'))}>Send</button>
+    </>
   );
 }
 
-export default function Add_place() {
-
+export default function AddPlace() {
   return (
       <>
         <div className="container">
@@ -81,7 +74,7 @@ export default function Add_place() {
               Форма для добавления Событий
             </h3>
           </div>
-            <Send_place/>
+            <PlaceForm />
         </div>
       </>
     )

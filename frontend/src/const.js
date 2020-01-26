@@ -1,5 +1,12 @@
-const BASE_API_URL = 'http://127.0.0.1:8000/api/v1';
+const BASE_API_URL = `${process.env.REACT_APP_BASE_API || '/api/v1'}`;
+const EVENTS = '/events';
+const PLACES = '/places';
+const AUTH_SUCCSESS = '/auth/success';
 
+console.log(process.env.NODE_ENV, process.env.REACT_APP_BASE_API);
 export {
-  BASE_API_URL
+  BASE_API_URL,
+  EVENTS,
+  PLACES,
+  AUTH_SUCCSESS,
 }

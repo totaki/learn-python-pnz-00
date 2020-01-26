@@ -2,10 +2,13 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer
+from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, MeSerializer
 from handler.models import Event, Place, Tag, User
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User as Auth_User
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -24,22 +27,26 @@ class PlaceViewSet(viewsets.ModelViewSet):
     serializer_class = PlaceSerializer
 
 
-class PrivatePlaceView(generics.GenericAPIView):
+class PrivatePlaceView(viewsets.ModelViewSet):
     """
     API endpoint that allows places current user's to be viewed.
     """
-
-    def post(self, requests):
-        user_token = self.request.data['token']
-        # user_token = '1852fcf45e9f15c4f10f59553bfb49fa09af2e8b'
-        token = Token.objects.get(key=user_token)
-        auth_user_id = token.user_id
-        auth_user = Auth_User.objects.get(id=auth_user_id)
-        bot_user = User.objects.get(user_id=auth_user)
-        place = Place.objects.get(owner=bot_user)
-        return Response(place.place_name)
-
     serializer_class = PrivatePlaceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        if hasattr(user, 'user') and user.user:
+            return Place.objects.filter(owner=user.user)
+        elif user and user.is_staff:
+            return Place.objects.filter()
+        else:
+            raise PermissionDenied()
+
+    def create(self, request, *args, **kwargs):
+        request._data = {**request.data, 'owner': request.user.user.id}
+        return super().create(request, *args, **kwargs)
+
 
 class TagsViewSet(viewsets.ModelViewSet):
     """
@@ -49,3 +56,10 @@ class TagsViewSet(viewsets.ModelViewSet):
     serializer_class = TagsSerializer
 
 
+class MeView(viewsets.ReadOnlyModelViewSet):
+
+    serializer_class = MeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user.user

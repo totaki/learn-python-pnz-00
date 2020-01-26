@@ -1,32 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import {AUTH_SUCCSESS, EVENTS} from "./const";
 
-const URL_ORIGIN = window.location.origin;
-let path = '/events';
 
-function Auth() {
+const Auth = () => {
+  const history = useHistory();
   let token_list = window.location.search.split('=');
-  // let path = '/auth/success';
   if (token_list[0] === '?token'){
     const token = token_list[1];
     localStorage.setItem('token', token);
-    window.location.href = `${URL_ORIGIN}${path}`;
+    history.push(AUTH_SUCCSESS);
+  } else {
+    history.push(EVENTS)
   }
-  else
-    path = '/events';
-    // window.location.href = `${URL_ORIGIN}${path}`;
-}
+  return null
+};
 
-function Auth_success() {
-    alert('Login success!');
-    let path = '/events';
-    window.location.href = `${URL_ORIGIN}${path}`;
-}
+const AuthSuccess = () => {
+  const history = useHistory();
+  alert('Login success!');
+  history.push(EVENTS);
+};
 
-function Logout() {
-  window.localStorage.removeItem('token')
-  // window.location.href = `${URL_ORIGIN}${path}`;
-}
 
 export default Auth
-export {Auth_success, Logout}
+export {AuthSuccess}
