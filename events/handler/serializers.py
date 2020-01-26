@@ -36,6 +36,12 @@ class PrivatePlaceSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PrivateEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+
 class TagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag

@@ -2,7 +2,8 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, MeSerializer
+from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, MeSerializer, \
+    PrivateEventSerializer
 from handler.models import Event, Place, Tag, User
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User as Auth_User
@@ -44,8 +45,16 @@ class PrivatePlaceView(viewsets.ModelViewSet):
             raise PermissionDenied()
 
     def create(self, request, *args, **kwargs):
-        request._data = {**request.data, 'owner': request.user.user.id}
+        request.data['owner'] = request.user.user.id
         return super().create(request, *args, **kwargs)
+
+
+class PrivateEventView(viewsets.ModelViewSet):
+    """
+    API endpoint that allows events to be added.
+    """
+    serializer_class = PrivateEventSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class TagsViewSet(viewsets.ModelViewSet):

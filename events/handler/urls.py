@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework import routers
-from handler.views import EventViewSet, PlaceViewSet, PrivatePlaceView, TagsViewSet, MeView
+from handler.views import EventViewSet, PlaceViewSet, PrivatePlaceView, TagsViewSet, MeView, PrivateEventView
 
 router = routers.DefaultRouter()
 router.register(r'events', EventViewSet)
@@ -15,4 +15,5 @@ urlpatterns = [
         'post': 'create',
         'get': 'list'
     })),
+    path('api/v1/private/events', PrivateEventView.as_view({'post': 'create'}))
 ]

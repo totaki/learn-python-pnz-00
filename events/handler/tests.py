@@ -65,3 +65,4 @@ def test_create_place(auth_req, place_data):
     assert response_set.status_code == 201
     data = response_set.json()
     assert data['place_name'] == place_data['place_name']
+    assert data['owner'] == 1

@@ -1,19 +1,15 @@
 import React, {useState, useEffect, useRef} from "react";
-import {BASE_API_URL} from "./const";
-import {getItems} from "./api";
+import {BASE_API_URL, PRIVATE_PLACES} from "./const";
+import {getItems, getPrivateItems} from "./api";
 
 
-function send({ current }, callback){
+function Send({ current }, callback){
 // Функция send отправляет данные из формы в api
 
   const getValue = name => {
   //Функция для заполнения данными из формы объекта наподобие массива
     return current.elements.namedItem(name).value;
   };
-
-
-
-
 }
 
 
@@ -21,17 +17,19 @@ function PushPlaces({place_name}) {
   return (<option>{place_name}</option>)
 }
 
-function Send_event() {
+function SendEvent() {
 // Здесь я объявляю переменные для отправки
   const [result, setResult] = useState({});
   const formRef = useRef(null);
 
 //В этом блоке я подгружаю все известные места в форму
   const [places, setPlaces] = useState([]);
-  const [path, _] = useState('/public/places/');
+  const [path, _] = useState(PRIVATE_PLACES);
+  const [url, setURL] = useState(null);
+  const token = window.localStorage.getItem('token');
 
   useEffect(() => {
-    getItems({path}, (j) => setPlaces(j.results))
+    getPrivateItems({ url, path, token }, (j) => setPlaces(j.results))
   }, [path]);
 //
   return (
@@ -85,7 +83,7 @@ function Send_event() {
           {places.map((e, i) => <PushPlaces {...e}/>)}
         </select>
       </div>
-      <button type="submit" className="btn btn-primary" onClick={() => send(formRef, setResult)}>Send</button>
+      <button type="submit" className="btn btn-primary" onClick={() => Send(formRef, setResult)}>Send</button>
     </form>
   );
 }
@@ -99,7 +97,7 @@ function AddEvent() {
           Форма для добавления Событий
         </h3>
       </div>
-      <Send_event />
+      <SendEvent />
     </div>
   </>
   )

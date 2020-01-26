@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import {AUTH_SUCCSESS, EVENTS} from "./const";
+import {AUTH_SUCCESS, EVENTS} from "./const";
 
 
 const Auth = () => {
@@ -9,7 +9,7 @@ const Auth = () => {
   if (token_list[0] === '?token'){
     const token = token_list[1];
     localStorage.setItem('token', token);
-    history.push(AUTH_SUCCSESS);
+    history.push(AUTH_SUCCESS);
   } else {
     history.push(EVENTS)
   }

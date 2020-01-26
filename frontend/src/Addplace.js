@@ -1,5 +1,6 @@
 import React, { useRef} from "react";
 import { useHistory } from "react-router-dom";
+import {BASE_API_URL, PRIVATE_PLACES} from "./const";
 
 const send = ({current}, callback) => {
   const getValue = name => {
@@ -15,7 +16,7 @@ const send = ({current}, callback) => {
   };
   const token = window.localStorage.getItem('token');
 
-  fetch('http://127.0.0.1:8000/api/v1/private/places', {
+  fetch(`${BASE_API_URL}${PRIVATE_PLACES}`, {
     method: 'POST',
     headers: {
       'Content-type': 'application/json; charset=utf-8',
@@ -30,7 +31,7 @@ const send = ({current}, callback) => {
 
 function PlaceForm() {
   const formRef = useRef(null);
-  const history = useHistory()
+  const history = useHistory();
 
   return (
     <>
@@ -38,25 +39,25 @@ function PlaceForm() {
       <div className="form-row">
         <div className="form-group col-md-4">
           <label htmlFor="inputAddress">Место проведения</label>
-          <input type="text" className="form-control" name="place_name" placeholder="Название" value="Test place"/>
+          <input type="text" className="form-control" name="place_name" placeholder="Название" />
         </div>
       </div>
       <div className="form-row">
         <div className="form-group col-md-4">
           <label htmlFor="inputCity">Город</label>
-          <input type="text" className="form-control" name="city" value="Penza"/>
+          <input type="text" className="form-control" name="city" />
         </div>
         <div className="form-group col-md-4">
           <label htmlFor="inputStreet">Улица</label>
-          <input type="text" className="form-control" name="street" value="Moskovskiy"/>
+          <input type="text" className="form-control" name="street" />
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="inputHouse">Дом</label>
-          <input type="text" className="form-control" name="house_number" value="10"/>
+          <input type="text" className="form-control" name="house_number" />
         </div>
         <div className="form-group col-md-2">
           <label htmlFor="inputOffice">Офис</label>
-          <input type="text" className="form-control" name="office_number" value="10"/>
+          <input type="text" className="form-control" name="office_number"/>
         </div>
       </div>
     </form>

@@ -1,4 +1,4 @@
-import {BASE_API_URL} from "./const";
+import {BASE_API_URL, PRIVATE_PLACES} from "./const";
 
 export const getItems = ({ url, path }, callback) => {
   const fullUrl = url || `${BASE_API_URL}${path}`;
@@ -9,3 +9,18 @@ export const getItems = ({ url, path }, callback) => {
     })
     .catch(e => console.log(e));
 };
+
+export const getPrivateItems = ({url, path, token }, callback) => {
+  const fullUrl = url || `${BASE_API_URL}${path}`;
+  fetch(`${BASE_API_URL}${PRIVATE_PLACES}`, {
+    method: 'GET',
+    headers: {
+      'Content-type': 'application/json; charset=utf-8',
+      'Authorization': `Token ${token}`
+  },})
+    .then(result => result.json())
+    .then(json => {
+      callback(json);
+  })
+    .catch(error => console.log(error));
+  };

@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Pagination from "./Pagination";
 import {getItems} from "./api";
-
-const EVENTS_ROUTE = 'events';
+import {EVENTS} from "./const";
 
 
 function Event({ title, body, event_date }) {
@@ -23,7 +22,7 @@ function Event({ title, body, event_date }) {
 
 
 function Events({ setRoute }) {
-  const path = '/public/events/';
+  const path = EVENTS;
   const [events, setEvents] = useState([]);
   const [url, setURL] = useState(null);
   const [pagination, setPagination] = useState([null, null]);
@@ -35,30 +34,29 @@ function Events({ setRoute }) {
 
   useEffect(() => {
     getItems({ url, path }, fetchCallback)
-  }, [url]);
+  }, [url, path]);
 
   const [next, previous] = pagination;
 
   return (
     <>
       <div>
-        <h2 style={{textAlign: "center"}}>Список мероприятий</h2>
-          <div>
-            <div className="row">
-              {events.map((e, i) => <Event {...e}/>)}
-              </div>
+        <h2 style={{textAlign: "center", marginBottom: 30, marginTop: 20}}>
+          Список мероприятий
+        </h2>
+        <div>
+          <div className="row">
+            {events.map((e, i) => <Event {...e}/>)}
           </div>
-        <Pagination
-          next={next}
-          previous={previous}
-          setURL={setURL}
-        />
+      </div>
+      <Pagination
+        next={next}
+        previous={previous}
+        setURL={setURL}
+      />
       </div>
     </>
   )
 }
 
 export default Events
-export {
-  EVENTS_ROUTE
-}
