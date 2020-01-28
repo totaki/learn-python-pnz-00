@@ -40,7 +40,8 @@ def event_data(req, place):
             "title": "КиШ",
             "place": place_id,
             "body": "Князь без Горшка",
-            "event_time": "2020-01-13T21:00:00Z"
+            "event_time": "2020-01-13T21:00:00Z",
+            "tags": [1],
     }
 
 
@@ -73,3 +74,10 @@ def auth_req(req, user):
     def _(method, url, body=None):
         return req(method, url, body, token=token)
     return _
+
+
+@pytest.fixture
+def private_event_data(event_data):
+    event_data['place'] = "Heror"
+    event_data['tags'] = ['Народная']
+    return {**event_data}

@@ -39,7 +39,7 @@ class PrivatePlaceSerializer(serializers.ModelSerializer):
 class PrivateEventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = '__all__'
+        fields = ['title', 'place', 'body', 'event_time', 'tags']
 
 
 class TagsSerializer(serializers.ModelSerializer):
@@ -47,8 +47,3 @@ class TagsSerializer(serializers.ModelSerializer):
         model = Tag
         fields = '__all__'
 
-
-class MeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AppUser
-        fields = '__all__'
