@@ -1,8 +1,10 @@
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics
-from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, PrivateEventSerializer
+from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, \
+    PrivateEventSerializer
 from handler.models import Event, Place, Tag, User
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User as Auth_User
@@ -55,6 +57,9 @@ class PrivateEventView(viewsets.ModelViewSet):
     serializer_class = PrivateEventSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return Event.objects.all()
+
     def create(self, request, *args, **kwargs):
         place_from_req = request.data['place']
         place = Place.objects.get(place_name=place_from_req)
@@ -72,9 +77,17 @@ class PrivateEventView(viewsets.ModelViewSet):
         return super().create(request, *args, **kwargs)
 
 
+# Добавляю свой класс для Pagination чтобы теги выводились на страницу все сразу
+class TagsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
 class TagsViewSet(viewsets.ModelViewSet):
     """
         API endpoint that allows tags to be viewed.
     """
     queryset = Tag.objects.all()
     serializer_class = TagsSerializer
+    pagination_class = TagsSetPagination  # использую особый класс
