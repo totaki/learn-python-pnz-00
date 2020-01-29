@@ -1,23 +1,19 @@
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import generics
 from handler.serializers import EventsSerializer, PlaceSerializer, TagsSerializer, PrivatePlaceSerializer, \
     PrivateEventSerializer
 from handler.models import Event, Place, Tag, User
-from rest_framework.authtoken.models import Token
-from django.contrib.auth.models import User as Auth_User
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from datetime import datetime
 
 
 class EventViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows events to be viewed or edited.
     """
-    queryset = Event.objects.all()
+    now = datetime.utcnow()
+    queryset = Event.objects.filter(event_time__gte=now).order_by("event_time")
     serializer_class = EventsSerializer
 
 
