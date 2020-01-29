@@ -7,6 +7,7 @@ from handler.models import User, Tag, Notification, Event
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.models import User as Auth_user
+from django.core.exceptions import ObjectDoesNotExist
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +141,12 @@ def auth(update, context):
     chat_id = update.effective_chat.id
     user = User.objects.get(external_id=chat_id)
     auth_user = Auth_user.objects.get(id=user.user_id)
-    token = Token.objects.create(user=auth_user)
+    try:
+        item = Token.objects.get(user_id=auth_user.id)
+        item.delete()
+        token = Token.objects.create(user=auth_user)
+    except ObjectDoesNotExist:
+        token = Token.objects.create(user=auth_user)
     URL = 'http://localhost:3000/auth'
     request = f'{URL}?token={token.key}'
     update.message.reply_text(request)
