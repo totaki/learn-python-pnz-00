@@ -34,13 +34,17 @@ def start(update, context):
 def tags(update, context):
     """Print tags"""
     chat_id = update.effective_chat.id
-    user = update.message.from_user
-    logger.info("User %s started subscribe session.", user.first_name)
-    reply_markup = get_tags(chat_id)
-    update.message.reply_text(
-        'Choose a tag for subscribe',
-        reply_markup=reply_markup
-    )
+    try:
+        User.objects.get(external_id=chat_id)
+        user = update.message.from_user
+        logger.info("User %s started subscribe session.", user.first_name)
+        reply_markup = get_tags(chat_id)
+        update.message.reply_text(
+            'Выберите тег для подписки',
+            reply_markup=reply_markup
+        )
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def get_tags(chat_id, current_page=1, subscribe=1):
@@ -116,40 +120,51 @@ def get_event_notificator(token, request_kwargs):
 def unsubscribe(update, context):
     """Print tags"""
     chat_id = update.effective_chat.id
-    user = update.message.from_user
-    logger.info("User %s started unsubscribe session.", user.first_name)
-    reply_markup = get_tags(chat_id, subscribe=0)
-    update.message.reply_text(
-        'Выберите тег для подписки',
-        reply_markup=reply_markup
-    )
+    try:
+        User.objects.get(external_id=chat_id)
+        user = update.message.from_user
+        logger.info("User %s started unsubscribe session.", user.first_name)
+        reply_markup = get_tags(chat_id, subscribe=0)
+        update.message.reply_text(
+            'Выберите от какого тега вас отписать',
+            reply_markup=reply_markup
+        )
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def get_upcoming_events(update, context):
     chat_id = update.effective_chat.id
-    logger.info(f'User {chat_id} asked upcoming events')
-    start_date = datetime.utcnow()
-    end_date = start_date + timedelta(days=60)
-    events = Event.objects.filter(event_time__range=(start_date, end_date))
-    for event in events:
-        event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
-        text = '\n'.join([event.title, event.body, event_date[0]])
-        update.message.reply_text(text)
+    try:
+        User.objects.get(external_id=chat_id)
+        logger.info(f'User {chat_id} asked upcoming events')
+        start_date = datetime.utcnow()
+        end_date = start_date + timedelta(days=60)
+        events = Event.objects.filter(event_time__range=(start_date, end_date))
+        for event in events:
+            event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
+            text = '\n'.join([event.title, event.body, event_date[0]])
+            update.message.reply_text(text)
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def auth(update, context):
     chat_id = update.effective_chat.id
-    user = User.objects.get(external_id=chat_id)
-    auth_user = Auth_user.objects.get(id=user.user_id)
     try:
-        item = Token.objects.get(user_id=auth_user.id)
-        item.delete()
-        token = Token.objects.create(user=auth_user)
-    except ObjectDoesNotExist:
-        token = Token.objects.create(user=auth_user)
-    URL = 'http://localhost:3000/auth'
-    request = f'{URL}?token={token.key}'
-    update.message.reply_text(request)
+        user = User.objects.get(external_id=chat_id)
+        auth_user = Auth_user.objects.get(id=user.user_id)
+        try:
+            item = Token.objects.get(user_id=auth_user.id)
+            item.delete()
+            token = Token.objects.create(user=auth_user)
+        except ObjectDoesNotExist:
+            token = Token.objects.create(user=auth_user)
+        URL = 'http://localhost:3000/auth'
+        request = f'{URL}?token={token.key}'
+        update.message.reply_text(request)
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def error(update, context):

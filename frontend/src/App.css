@@ -4,9 +4,9 @@
     background-color: #f9e10a;
 }
 
-.card-text {
-    height: 150px;
-}
+/*.card-text {*/
+/*    height: 150px;*/
+/*}*/
 
 .none {
     display: none;
@@ -21,4 +21,29 @@
     line-height: 1.5;
     border-radius: .25rem;
     float: right;
+}
+
+.pagination-previous {
+    float: left;
+}
+
+.pagination-next {
+    float: right;
+}
+
+.hide-body {
+    display:none;
+    margin:5px 0px;
+    padding:10px;
+    width:98%;
+    border:1px solid #adb5bd;
+}
+/* кликабельный текст */
+.preview-body {
+    color:#e0a800;
+    cursor: default;
+}
+.preview-body:hover{
+    border-bottom:1px dashed darkred;
+    color:darkred;
 }

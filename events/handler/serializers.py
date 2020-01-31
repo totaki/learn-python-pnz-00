@@ -13,7 +13,7 @@ class EventsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = ['title', 'place', 'body', 'event_date', 'place_name', 'event_time']
+        fields = ['id', 'title', 'place', 'body', 'event_date', 'place_name', 'event_time']
 
     def get_place_name(self, obj):
         return f'{obj.place.place_name}'

@@ -4,21 +4,32 @@ import {getItems} from "./api";
 import {EVENTS} from "./const";
 
 
-function Event({ title, body, event_date }) {
+function Event({id, title, body, event_date }) {
+  const viewBody =() => {
+    const body = document.getElementById(id);
+    if (body){
+      body.style.display = (body.style.display === 'block') ? 'none' : 'block';
+    }
+    else alert('not found')
+  };
   return (
 
         <div className="col-md-4">
           <div className="card mb-4 shadow-sm">
             <div className="card-body">
               <h5 className="card-title">{title}</h5>
-              <p className="card-text">{body}</p>
+              <p className="card-text">
+                <span id={id} className="hide-body">{body}</span>
+                <span className="preview-body" onClick={viewBody}>Подробнее</span>
+              </p>
               <p>{event_date}</p>
             </div>
           </div>
         </div>
-
   )
 }
+
+
 
 
 function Events({ setRoute }) {
