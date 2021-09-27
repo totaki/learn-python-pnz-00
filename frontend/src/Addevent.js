@@ -1,213 +1,163 @@
-import React, {useState, useEffect} from "react";
-import {BASE_API_URL} from "./const";
-import SendForm from "./somesend";
+import React, {useState, useEffect, useRef} from "react";
+import {BASE_API_URL, PRIVATE_EVENTS, PRIVATE_PLACES, TAGS} from "./const";
+import {getPrivateItems, getTagItems} from "./api";
+import {useHistory} from "react-router-dom";
 
 
-const ADD_EVENT_ROUTE = 'add_event';
+const Send = ({current}, callback) => {
+// Функция send отправляет данные из формы в api
 
-function SendPost(obj, url) {
-  let xhr = new XMLHttpRequest();
-  let json = JSON.stringify(obj);
-  xhr.open("POST", url);
-  xhr.setRequestHeader('Content-type', 'application/json');
-  xhr.send(json);
-  xhr.onreadystatechange = function()
-  {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 201) {
-        alert('Отправлено:');
-      }
-    }
-  }
+  const getValue = name => {
+  //Функция для заполнения данными из формы объекта
+    return current.elements.namedItem(name).value;
+  };
+
+  //Получение значений select multiple
+  const selected = document.querySelectorAll('#FormControlSelect2 option:checked');
+  const tags = Array.from(selected).map(el => el.value);
+  console.log(tags);
+  //
+  let time = getValue("time");
+  console.log(time);
+  let date = getValue("date");
+  console.log(date);
+  let event_time = date + "T" + time + ":00Z";
+  console.log(event_time);
+
+  let event = {
+    "title": getValue("title"),
+    "body": getValue("body"),
+    "place": getValue("place"),
+    "tags": tags,
+    "event_time": event_time
+  };
+  const token = window.localStorage.getItem('token');
+
+  fetch(`${BASE_API_URL}${PRIVATE_EVENTS}`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json; charset=utf-8',
+      'Authorization': `Token ${token}`
+    },
+    body: JSON.stringify(event)
+  })
+    .then(response => response.json())
+    .then(json => callback(json));
+
+};
+
+
+function PushPlaces({place_name}) {
+  return (<option>{place_name}</option>)
 }
 
-class AddEvent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEventName: '',
-      isEventDate: '',
-      isEventTime: '',
-      isEventBody: '',
-      isPlaceName: '',
-      isPlaceCity: '',
-      isPlaceStreet: '',
-      isPlaceHouse: '',
-      isPlaceOffice: '',
-      isTag: ''
-    };
+function PushTags({title}) {
+  return (<option>{title}</option>)
+}
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
 
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
+function EventForm() {
+// Здесь я объявляю переменные для отправки
+  const formRef = useRef(null);
+  const history = useHistory();
+//В этом блоке я подгружаю все известные места в форму
+  const [places, setPlaces] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [path, _] = useState(PRIVATE_PLACES);
+  const [path_tags,] = useState(TAGS);
+  const [url, setURL] = useState(null);
+  const token = window.localStorage.getItem('token');
 
-    this.setState({
-      [name]: value
-    });
-  }
+  useEffect(() => {
+    getPrivateItems({ url, path, token }, (j) => setPlaces(j.results))
+  }, [path]);
 
-  handleChanged() {
-    let place = {
-      "place_name": this.state.isPlaceName,
-      "city": this.state.isPlaceCity,
-      "street": this.state.isPlaceStreet,
-      "house_number": this.state.isPlaceHouse,
-      "office_number": this.state.isPlaceOffice
-    };
-    let url = "http://127.0.0.1:8000/api/v1/places/";
-    SendPost(place, url);
 
-    // alert('Event отправлено:'
-    //   + this.state.isEventName + ';'
-    //   + this.state.isEventDate + ';'
-    //   + this.state.isEventTime + ';'
-    //   + this.state.isEventBody + ';'
-    //   + this.state.isTag + ';'
-    // );
-    // event.preventDefault();
-  }
+  useEffect(() => {
+    getTagItems({path_tags}, (j) => setTags(j.results))
+  }, [path_tags]);
 
-  render() {
-    return (
-      <form>
-        <div className="form-row">
-          <div className="form-group col-md-6">
-            <label htmlFor="input_event_name">Наименование события</label>
-            <input
-              className="form-control"
-              name="isEventName"
-              type="text"
-              checked={this.state.isEventName}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group col-md-3">
-            <p>
-              <label htmlFor="input_date">Дата проведения</label>
-              <input
-                className="form-control"
-                name="isEventDate"
-                type="date"
-                checked={this.state.isEventDate}
-                onChange={this.handleInputChange}
-              />
-            </p>
-          </div>
-          <div className="form-group col-md-3">
-            <p>
-              <label htmlFor="input_time">Время начала</label>
-              <input
-                className="form-control"
-                name="isEventTime"
-                type="time"
-                checked={this.state.isEventTime}
-                onChange={this.handleInputChange}
-              />
-            </p>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text">Описание события</span>
-            </div>
-            <textarea
-              className="form-control"
-              aria-label="input-group-text"
-              name="isEventBody"
-              checked={this.state.isEventBody}
-              onChange={this.handleInputChange}
-            />
-          </div>
-        </div>
-        <div className="form-group">
-          <label htmlFor="inputAddress">Место проведения</label>
+//
+  return (
+    <form className="App" ref={formRef} id="eventForm">
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label htmlFor="input_event_name">Наименование события</label>
           <input
-            type="text"
             className="form-control"
-            placeholder="Название"
-            name="isPlaceName"
-            checked={this.state.isPlaceName}
-            onChange={this.handleInputChange}
+            name="title"
+            type="text"
           />
         </div>
-        <div className="form-row">
-          <div className="form-group col-md-4">
-            <label htmlFor="inputCity">Город</label>
+        <div className="form-group col-md-3">
+          <p>
+            <label htmlFor="input_date">Дата проведения</label>
             <input
-              type="text"
               className="form-control"
-              name="isPlaceCity"
-              checked={this.state.isPlaceCity}
-              onChange={this.handleInputChange}
+              name="date"
+              type="date"
             />
-          </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="inputStreet">Улица</label>
-            <input
-              type="text"
-              className="form-control"
-              name="isPlaceStreet"
-              checked={this.state.isPlaceStreet}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group col-md-2">
-            <label htmlFor="inputStreet">Дом</label>
-            <input
-              type="text"
-              className="form-control"
-              name="isPlaceHouse"
-              checked={this.state.isPlaceHouse}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group col-md-2">
-            <label htmlFor="inputStreet">Офис</label>
-            <input
-              type="text"
-              className="form-control"
-              name="isPlaceOffice"
-              checked={this.state.isPlaceOffice}
-              onChange={this.handleInputChange}
-            />
-          </div>
-          <div className="form-group col-md-4">
-            <label htmlFor="inputState">Тэги</label>
-            <input
-              type="text"
-              className="form-control"
-              name="isTag"
-              checked={this.state.isTag}
-              onChange={this.handleInputChange}
-            />
-          </div>
+          </p>
         </div>
-        <button type="submit" className="btn btn-primary" onClick={() => this.handleChanged()}>Send</button>
-      </form>
-    );
-  }
-  }
-
-  function Add_event() {
-
-    return (
-    <>
-      <div className="container">
-        <div className="my-h1"><h3 style={{textAlign: "center"}}>Форма для добавления Событий</h3></div>
-        < SendForm/>
-        {/*< AddEvent />*/}
+        <div className="form-group col-md-3">
+          <p>
+            <label htmlFor="input_time">Время начала</label>
+            <input
+              className="form-control"
+              name="time"
+              type="time"
+            />
+          </p>
+        </div>
       </div>
-    </>
-    )
-  }
 
-  export default Add_event
-  export {
-    ADD_EVENT_ROUTE
-  }
+      <div className="form-group">
+        <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text">Описание события</span>
+          </div>
+          <textarea
+            className="form-control"
+            aria-label="input-group-text"
+            name="body"
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group col-md-6">
+          <label htmlFor="FormControlSelect1">Выберите место проведения:</label>
+          <select className="form-control" id="FormControlSelect1" name="place">
+            <option>Выбрать</option>
+            {places.map((e, i) => <PushPlaces {...e}/>)}
+          </select>
+        </div>
+          <div className="form-group col-md-6">
+          <label htmlFor="FormControlSelect2">Выберите подходящие тэги:</label>
+          <select className="form-control" id="FormControlSelect2" name="tags" multiple="multiple" >
+            {tags.map((e, i) => <PushTags {...e}/>)}
+          </select>
+        </div>
+      </div>
+      <button type="submit" className="btn btn-primary" onClick={
+        () => Send(formRef, () => history.push('/events'))
+      }>Send</button>
+    </form>
+  );
+}
+
+function AddEvent() {
+  return (
+  <>
+    <div className="container">
+      <div className="my-h1">
+        <h3 style={{textAlign: "center", marginBottom: 30, marginTop: 20}}>
+          Форма для добавления Событий
+        </h3>
+      </div>
+      <EventForm />
+    </div>
+  </>
+  )
+}
+
+export default AddEvent

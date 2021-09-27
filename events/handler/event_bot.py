@@ -5,6 +5,9 @@ from django.core.paginator import Paginator
 from datetime import datetime, timedelta
 from handler.models import User, Tag, Notification, Event
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User as Auth_user
+from django.core.exceptions import ObjectDoesNotExist
 
 logger = logging.getLogger(__name__)
 
@@ -20,22 +23,28 @@ def start(update, context):
     try:
         User.objects.get(external_id=user_id)
         logger.error(f"The user {username} is in the database")
-        update.message.reply_text('We already met.')
+        update.message.reply_text('Мы уже знакомы.')
     except User.DoesNotExist:
-        User.objects.create(external_id=user_id, name=username, creation_date=message_date)
-        update.message.reply_text(f'Hi, {username}! Your id {user_id}. Now is {message_date}')
+        auth_name = f'telegram_{user_id}'
+        auth_user = Auth_user.objects.create(username=auth_name)
+        User.objects.create(external_id=user_id, name=username, creation_date=message_date, user=auth_user)
+        update.message.reply_text(f'Привет, {username}! Вы зарегистрированы {message_date}')
 
 
 def tags(update, context):
     """Print tags"""
     chat_id = update.effective_chat.id
-    user = update.message.from_user
-    logger.info("User %s started subscribe session.", user.first_name)
-    reply_markup = get_tags(chat_id)
-    update.message.reply_text(
-        'Choose a tag for subscribe',
-        reply_markup=reply_markup
-    )
+    try:
+        User.objects.get(external_id=chat_id)
+        user = update.message.from_user
+        logger.info("User %s started subscribe session.", user.first_name)
+        reply_markup = get_tags(chat_id)
+        update.message.reply_text(
+            'Выберите тег для подписки',
+            reply_markup=reply_markup
+        )
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def get_tags(chat_id, current_page=1, subscribe=1):
@@ -85,10 +94,10 @@ def change_notifications(update, context):
         user = User.objects.get(external_id=chat_id)
         if int(subscribe) == 1:
             user.tags.add(tag)
-            message = f'You are subscribed to {tag.title}'
+            message = f'Вы подписаны на {tag.title}'
         elif int(subscribe) == 0:
             user.tags.remove(tag)
-            message = f'You are unsubscribe to {tag.title}'
+            message = f'Вы отписаны от {tag.title}'
     elif prefix == TAG_PAGINATOR_PREFIX:
         reply_markup = get_tags(chat_id, answer, subscribe)
         message = update.effective_message.text
@@ -111,30 +120,51 @@ def get_event_notificator(token, request_kwargs):
 def unsubscribe(update, context):
     """Print tags"""
     chat_id = update.effective_chat.id
-    user = update.message.from_user
-    logger.info("User %s started unsubscribe session.", user.first_name)
-    reply_markup = get_tags(chat_id, subscribe=0)
-    update.message.reply_text(
-        'Choose a tag for unsubscribe',
-        reply_markup=reply_markup
-    )
+    try:
+        User.objects.get(external_id=chat_id)
+        user = update.message.from_user
+        logger.info("User %s started unsubscribe session.", user.first_name)
+        reply_markup = get_tags(chat_id, subscribe=0)
+        update.message.reply_text(
+            'Выберите от какого тега вас отписать',
+            reply_markup=reply_markup
+        )
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def get_upcoming_events(update, context):
     chat_id = update.effective_chat.id
-    logger.info(f'User {chat_id} asked upcoming events')
-    start_date = datetime.utcnow()
-    end_date = start_date + timedelta(days=60)
-    events = Event.objects.filter(event_time__range=(start_date, end_date))
-    for event in events:
-        event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
-        text = '\n'.join([event.title, event.body, event_date[0]])
-        update.message.reply_text(text)
+    try:
+        User.objects.get(external_id=chat_id)
+        logger.info(f'User {chat_id} asked upcoming events')
+        start_date = datetime.utcnow()
+        end_date = start_date + timedelta(days=60)
+        events = Event.objects.filter(event_time__range=(start_date, end_date))
+        for event in events:
+            event_date = event.event_time.isoformat(sep=' ', timespec='minutes').split('+')
+            text = '\n'.join([event.title, event.body, event_date[0]])
+            update.message.reply_text(text)
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
-# def send_notifications(update, context, chat_id, event):
-#     context.bot.send_message(chat_id=chat_id, text=f'Новое событие по вашей подписке:'
-#                                                    f'{event.title}, {event.body}')
+def auth(update, context):
+    chat_id = update.effective_chat.id
+    try:
+        user = User.objects.get(external_id=chat_id)
+        auth_user = Auth_user.objects.get(id=user.user_id)
+        try:
+            item = Token.objects.get(user_id=auth_user.id)
+            item.delete()
+            token = Token.objects.create(user=auth_user)
+        except ObjectDoesNotExist:
+            token = Token.objects.create(user=auth_user)
+        URL = 'http://localhost:3000/auth'
+        request = f'{URL}?token={token.key}'
+        update.message.reply_text(request)
+    except User.DoesNotExist:
+        update.message.reply_text('Для начала нажмите /start')
 
 
 def error(update, context):
@@ -150,6 +180,7 @@ def event_bot(token, PROXY):
     dp.add_handler(CommandHandler("tags", tags))
     dp.add_handler(CommandHandler("unsubscribe", unsubscribe))
     dp.add_handler(CommandHandler("events", get_upcoming_events))
+    dp.add_handler(CommandHandler("auth", auth))
     dp.add_handler(CallbackQueryHandler(change_notifications))
     dp.add_error_handler(error)
     updater.start_polling()

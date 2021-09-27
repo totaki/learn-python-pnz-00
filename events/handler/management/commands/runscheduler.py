@@ -19,8 +19,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         token = options['token']
         tasks = [
-            Task(10, Fetcher([RostokhallParser, BarParser]), save_event),
-            Task(10, check_event, get_notification_runner(token, PROXY))
+            Task(1000, Fetcher([RostokhallParser, BarParser]), save_event),
+            Task(1000, check_event, get_notification_runner(token, PROXY))
         ]
         scheduler = Scheduler(tasks, options['timeout'])
         scheduler.run()
